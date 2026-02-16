@@ -70,37 +70,6 @@ services:
       - 8.8.8.8
       - 1.1.1.1
 
-### FILE: ./kavita/docker-compose.yml ###
-services:
-  kavita:
-    image: jvmilazz0/kavita:latest
-    container_name: kavita
-    restart: unless-stopped
-    volumes:
-      - ./kavita_config:/kavita/config # Where Kavita stores its data
-      - ./books:/books                 # Your actual book files (EPUB, PDF, etc.)
-    environment:
-      - TZ=Europe/Sofia
-    ports:
-      - 5000:5000                      # Web Interface
-
-### FILE: ./koillection/docker-compose.yml ###
-services:
-  koillection:
-    image: koillection/koillection:latest
-    container_name: koillection
-    restart: unless-stopped
-    ports:
-      - "8095:80"
-    environment:
-      - DB_DRIVER=pdo_sqlite
-      - APP_DEBUG=0
-      - PHP_TZ=Europe/Sofia
-    volumes:
-      - ./config:/app/config
-      - ./uploads:/app/public/uploads
-      - ./db:/app/var/data
-
 ### FILE: ./kv/docker-compose.yml ###
 - type: html
   title: "Last 3 notes"

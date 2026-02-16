@@ -14,45 +14,6 @@
 │   ├── config
 │   │   └── glance.yml
 │   └── docker-compose.yml
-├── kavita
-│   ├── books
-│   │   └── Library
-│   │       └── Jordan_Radichkov_-_Noev_kovcheg_-_11940-b.epub
-│   ├── docker-compose.yml
-│   └── kavita_config
-│       ├── appsettings.json
-│       ├── bookmarks
-│       ├── cache
-│       ├── cache.db
-│       ├── cache.db-shm
-│       ├── cache.db-wal
-│       ├── cache-long
-│       │   └── pr_cache
-│       ├── covers
-│       │   ├── v1_c1.png
-│       │   └── v2_c2.png
-│       ├── favicons
-│       ├── fonts
-│       ├── images
-│       │   └── publishers
-│       ├── kavita.db
-│       ├── kavita.db-shm
-│       ├── kavita.db-wal
-│       ├── logs
-│       │   ├── kavita20260216.log
-│       │   └── kavita20260217.log
-│       ├── progress_export.csv
-│       ├── progress_export-v0.8.5.csv
-│       ├── temp
-│       ├── templates
-│       └── themes
-├── koillection
-│   ├── config
-│   ├── data
-│   ├── db
-│   ├── docker-compose.yml
-│   ├── docker_compose.yml
-│   └── uploads
 ├── kv
 │   ├── data
 │   │   ├── events.jsonl
@@ -9705,4 +9666,4 @@
     │   └── rdtclient.log
     └── tailscale_config  [error opening dir]
 
-3092 directories, 6614 files
+3070 directories, 6597 files
