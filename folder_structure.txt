@@ -1,7 +1,6 @@
 .
 ├── backup_filters.txt
 ├── backup.log
-├── books
 ├── docker-compose.yml
 ├── filebrowser-docker
 │   ├── db
@@ -17,7 +16,9 @@
 │   └── docker-compose.yml
 ├── kavita
 │   ├── books
-│   │   └── Jordan_Radichkov_-_Noev_kovcheg_-_11940-b.epub
+│   │   └── Library
+│   │       ├── Jordan_Radichkov_-_Noev_kovcheg_-_11940-b.epub
+│   │       └── Jordan_Radichkov_-_Noev_kovcheg_-_11940-b.pdf
 │   ├── docker-compose.yml
 │   └── kavita_config
 │       ├── appsettings.json
@@ -399,6 +400,7 @@
 │   │               ├── Setup Plex.html
 │   │               └── Updates
 │   └── rclone.conf
+├── README.md
 ├── start_backup.sh
 ├── vaultwarden
 │   ├── docker-compose.yml
@@ -9698,4 +9700,4 @@
     │   └── rdtclient.log
     └── tailscale_config  [error opening dir]
 
-3090 directories, 6609 files
+3090 directories, 6611 files
