@@ -1,0 +1,118 @@
+.
+├── backup_filters.txt
+├── backup.log
+├── docker-compose.yml
+├── filebrowser-docker
+│   ├── db
+│   ├── docker-compose.yml
+│   ├── filebrowser.db
+│   └── settings.json
+├── folder_structure.txt
+├── glance
+│   ├── assets
+│   │   └── user.css
+│   ├── config
+│   │   └── glance.yml
+│   └── docker-compose.yml
+├── gym-db
+├── koillection
+│   ├── data
+│   ├── db
+│   └── docker-compose.yml
+├── kv
+│   ├── data
+│   │   ├── events.jsonl
+│   │   └── kv.json
+│   ├── docker-compose.yml
+│   ├── public
+│   │   └── index.html
+│   └── server.js
+├── media_fix
+│   └── shows
+│       └── Peaky Blinders -> /mnt/zurg/media/movies/Peaky.Blinders.S01.1080i.DTS-HD.MA.2.0.AVC.REMUX-FraMeSToR
+├── myphone.ovpn
+├── my_server_architecture.txt
+├── nginx
+│   ├── data
+│   │   ├── access
+│   │   ├── custom_ssl
+│   │   ├── database.sqlite
+│   │   ├── keys.json
+│   │   ├── letsencrypt-acme-challenge
+│   │   ├── logs
+│   │   └── nginx
+│   ├── docker-compose.yml
+│   └── letsencrypt
+├── projects
+│   └── kvault
+│       └── kv.py
+├── rd-server
+│   ├── config.yml
+│   ├── docker-compose.yml
+│   ├── plex_config
+│   │   └── Library
+│   └── rclone.conf
+├── start_backup.sh
+├── vaultwarden
+│   ├── docker-compose.yml
+│   ├── vaultwarden.crt
+│   ├── vaultwarden.key
+│   └── vw-data
+│       ├── db.sqlite3
+│       ├── db.sqlite3-shm
+│       ├── db.sqlite3-wal
+│       ├── icon_cache
+│       ├── rsa_key.pem
+│       ├── sends
+│       └── tmp
+├── workspace
+│   └── kvault
+└── zurg
+    ├── adguard_conf
+    │   └── AdGuardHome.yaml
+    ├── adguard_work
+    │   └── data
+    ├── config
+    │   ├── config.yml
+    │   └── docker-compose.yml
+    ├── config.yml
+    ├── docker-compose.yml
+    ├── downloads
+    │   └── radarr
+    ├── overseerr_config
+    │   ├── db
+    │   ├── logs
+    │   └── settings.json
+    ├── plex_config
+    │   └── Library
+    ├── prowlarr_config
+    │   ├── asp
+    │   ├── Backups
+    │   ├── config.xml
+    │   ├── Definitions
+    │   ├── logs
+    │   ├── logs.db
+    │   ├── prowlarr.db
+    │   ├── prowlarr.db-shm
+    │   ├── prowlarr.db-wal
+    │   ├── prowlarr.pid
+    │   └── Sentry
+    ├── radarr_config
+    │   ├── asp
+    │   ├── Backups
+    │   ├── config.xml
+    │   ├── logs
+    │   ├── logs.db
+    │   ├── MediaCover
+    │   ├── radarr.db
+    │   ├── radarr.pid
+    │   └── Sentry
+    ├── rclone.conf
+    ├── rdtclient_config
+    │   ├── rdtclient.db
+    │   ├── rdtclient.db-shm
+    │   ├── rdtclient.db-wal
+    │   └── rdtclient.log
+    └── tailscale_config  [error opening dir]
+
+61 directories, 55 files
