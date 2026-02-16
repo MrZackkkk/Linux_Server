@@ -34,3 +34,17 @@ The server hosts a suite of applications for media, productivity, and system man
 The project is organized by service, with each directory containing its own `docker-compose.yml` and configuration files.
 
 *(Note: The actual configuration files are primarily documented in `my_server_architecture.txt` and `folder_structure.txt`)*
+
+## 📝 Generating Documentation
+
+The documentation files `folder_structure.txt` and `my_server_architecture.txt` are generated using the following commands:
+
+**Generate `folder_structure.txt`:**
+```bash
+tree -I 'node_modules|.git' > folder_structure.txt
+```
+
+**Generate `my_server_architecture.txt`:**
+```bash
+find . -maxdepth 4 -not -path '*/.*' -name "docker-compose.yml" -print0 | sort -z | xargs -0 -I {} bash -c 'echo ""; echo "### FILE: {} ###"; cat "{}"' > my_server_architecture.txt
+```
