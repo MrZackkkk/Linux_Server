@@ -1,4 +1,39 @@
 
+### FILE: ./docker-compose.yml ###
+version: '3'
+services: 
+  nocodb: 
+    image: nocodb/nocodb:latest
+    ports: 
+      - "8091:8080"
+    restart: always
+    environment: 
+      # Тук указваме на NocoDB къде е базата
+      NC_DB: "pg://postgres:5432?u=postgres&p=password&d=gymbox" 
+    depends_on: 
+      - postgres
+    volumes: 
+      - nc_data:/usr/app/data
+
+  postgres: 
+    # Използваме версия 16, за да избегнем проблемите с 'latest'
+    image: postgres:16
+    restart: always
+    environment: 
+      POSTGRES_DB: gymbox
+      POSTGRES_PASSWORD: password
+      POSTGRES_USER: postgres
+    volumes: 
+      - pg_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+volumes:
+  nc_data:
+  pg_data:
 
 ### FILE: ./filebrowser-docker/docker-compose.yml ###
 version: '3'
@@ -16,7 +51,6 @@ services:
     restart: unless-stopped
     security_opt:
       - no-new-privileges:true
-
 
 ### FILE: ./glance/docker-compose.yml ###
 services:
@@ -36,24 +70,152 @@ services:
       - 8.8.8.8
       - 1.1.1.1
 
-
-### FILE: ./koillection/docker-compose.yml ###
+### FILE: ./kavita/docker-compose.yml ###
 services:
-  koillection:
-    image: koillection/koillection:1.5.4
-    container_name: koillection
-    environment:
-      - APP_DEBUG=false
-      - DB_DRIVER=pdo_sqlite
-      - DB_PORT=3306        # Add this to satisfy the numeric check
-      - PHP_TZ=Europe/Sofia # Optional: Fixes the UTC warning
-    volumes:
-      - ./data:/uploads
-      - ./db:/data
-    ports:
-      - 8095:95
+  kavita:
+    image: jvmilazz0/kavita:latest
+    container_name: kavita
     restart: unless-stopped
+    volumes:
+      - ./kavita_config:/kavita/config # Where Kavita stores its data
+      - ./books:/books                 # Your actual book files (EPUB, PDF, etc.)
+    environment:
+      - TZ=Europe/Sofia
+    ports:
+      - 5000:5000                      # Web Interface
 
+### FILE: ./kv/docker-compose.yml ###
+- type: html
+  title: "Last 3 notes"
+  content: |
+    <div id="kv-last3" style="font-family:system-ui; line-height:1.35;">
+      <div style="opacity:.75">Loading…</div>
+    </div>
+
+    <script>
+      (async () => {
+        const host = "http://HOST_IP:8099";
+        const box = document.getElementById("kv-last3");
+
+        function esc(s){return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[c]));}
+
+        async function load() {
+          try {
+            const r = await fetch(host + "/api/recent?limit=3");
+            const j = await r.json();
+            const ev = (j.events || []).slice().reverse(); // newest first -> show newest on top
+            if (!ev.length) { box.innerHTML = '<div style="opacity:.75">No entries yet.</div>'; return; }
+
+            box.innerHTML = ev.map(e => `
+              <div style="padding:10px; border:1px solid rgba(255,255,255,.12); border-radius:12px; margin:8px 0;">
+                <div style="display:flex; justify-content:space-between; gap:10px;">
+                  <strong>${esc(e.key)}</strong>
+                  <span style="opacity:.65; font-size:12px;">${esc(new Date(e.ts).toLocaleString())}</span>
+                </div>
+                <div style="margin-top:6px; white-space:pre-wrap;">${esc(e.value ?? "")}</div>
+              </div>
+            `).join("");
+          } catch (err) {
+            box.innerHTML = '<div style="color:#ffb3b3">Cannot load recent entries.</div>';
+          }
+        }
+
+        await load();
+        setInterval(load, 15000); // refresh на 15 сек
+      })();
+    </script>
+
+### FILE: ./nginx/docker-compose.yml ###
+version: '3.8'
+services:
+  app:
+    image: 'jc21/nginx-proxy-manager:latest'
+    restart: unless-stopped
+    ports:
+      - '80:80'      # Публичен HTTP порт (Вход за сайтовете ти)
+      - '81:81'      # Админ панел на NPM
+      - '443:443'    # HTTPS порт
+    volumes:
+      - ./data:/data
+      - ./letsencrypt:/etc/letsencrypt
+
+### FILE: ./rd-server/docker-compose.yml ###
+version: '3.8'
+
+services:
+  zurg:
+    image: ghcr.io/debridmediamanager/zurg-testing:latest
+    container_name: zurg
+    restart: unless-stopped
+    ports:
+      - 9999:9999
+    volumes:
+      - ./config.yml:/app/config.yml
+      - zurg_data:/app/data
+
+  rclone:
+    image: rclone/rclone:latest
+    container_name: rclone
+    restart: unless-stopped
+    devices:
+      - /dev/fuse:/dev/fuse
+    cap_add:
+      - SYS_ADMIN
+    security_opt:
+      - apparmor:unconfined
+    command: "mount zurg: /data/mount --vfs-cache-mode full --allow-other --dir-cache-time 10s --vfs-read-chunk-size 32M"
+    volumes:
+      - ./rclone.conf:/config/rclone/rclone.conf
+      - /mnt/zurg:/data/mount:rshared  # Това създава папка /mnt/zurg на твоя компютър
+    depends_on:
+      - zurg
+
+  plex:
+    image: lscr.io/linuxserver/plex:latest
+    container_name: plex
+    network_mode: host
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - VERSION=docker
+    volumes:
+      - ./plex_config:/config
+      - /mnt/zurg:/media/zurg  # Plex чете от тук
+    restart: unless-stopped
+    depends_on:
+      - rclone
+  adguard:
+      image: adguard/adguardhome
+      container_name: adguard
+      restart: unless-stopped
+      ports:
+        - "53:53/tcp"  # DNS (Основният порт)
+        - "53:53/udp"  # DNS (UDP е задължителен)
+        - "3000:3000/tcp" # Setup Port
+        - "8083:80/tcp"   # Admin Web Interface (вътре е 80, ние го виждаме на 8083)
+      volumes:
+        - ~/server/config/adguard/work:/opt/adguardhome/work
+        - ~/server/config/adguard/conf:/opt/adguardhome/conf
+
+
+
+volumes:
+  zurg_data:
+
+### FILE: ./vaultwarden/docker-compose.yml ###
+services:
+  vaultwarden:
+    image: vaultwarden/server:latest
+    container_name: vaultwarden
+    restart: always
+    environment:
+      - WEBSOCKET_ENABLED=true
+      - SIGNUPS_ALLOWED=false  # Ще го сменим на false, след като направиш акаунт
+      - DOMAIN=https://vaultwarden.home
+    volumes:
+      - ./vw-data:/data
+    ports:
+      - 8085:80 # 8085 към външния свят (както е в NPM), 80 вътре в контейнера
 
 ### FILE: ./zurg/config/docker-compose.yml ###
 services:
@@ -65,7 +227,6 @@ services:
       - 9999:9999
     volumes:
       - ~/zurg/config:/app/config
-
 
 ### FILE: ./zurg/docker-compose.yml ###
 services:
@@ -202,177 +363,3 @@ services:
 
 volumes:
   zurg_data:
-
-
-### FILE: ./rd-server/docker-compose.yml ###
-version: '3.8'
-
-services:
-  zurg:
-    image: ghcr.io/debridmediamanager/zurg-testing:latest
-    container_name: zurg
-    restart: unless-stopped
-    ports:
-      - 9999:9999
-    volumes:
-      - ./config.yml:/app/config.yml
-      - zurg_data:/app/data
-
-  rclone:
-    image: rclone/rclone:latest
-    container_name: rclone
-    restart: unless-stopped
-    devices:
-      - /dev/fuse:/dev/fuse
-    cap_add:
-      - SYS_ADMIN
-    security_opt:
-      - apparmor:unconfined
-    command: "mount zurg: /data/mount --vfs-cache-mode full --allow-other --dir-cache-time 10s --vfs-read-chunk-size 32M"
-    volumes:
-      - ./rclone.conf:/config/rclone/rclone.conf
-      - /mnt/zurg:/data/mount:rshared  # Това създава папка /mnt/zurg на твоя компютър
-    depends_on:
-      - zurg
-
-  plex:
-    image: lscr.io/linuxserver/plex:latest
-    container_name: plex
-    network_mode: host
-    environment:
-      - PUID=1000
-      - PGID=1000
-      - VERSION=docker
-    volumes:
-      - ./plex_config:/config
-      - /mnt/zurg:/media/zurg  # Plex чете от тук
-    restart: unless-stopped
-    depends_on:
-      - rclone
-  adguard:
-      image: adguard/adguardhome
-      container_name: adguard
-      restart: unless-stopped
-      ports:
-        - "53:53/tcp"  # DNS (Основният порт)
-        - "53:53/udp"  # DNS (UDP е задължителен)
-        - "3000:3000/tcp" # Setup Port
-        - "8083:80/tcp"   # Admin Web Interface (вътре е 80, ние го виждаме на 8083)
-      volumes:
-        - ~/server/config/adguard/work:/opt/adguardhome/work
-        - ~/server/config/adguard/conf:/opt/adguardhome/conf
-
-
-
-volumes:
-  zurg_data:
-
-
-### FILE: ./docker-compose.yml ###
-version: '3'
-services: 
-  nocodb: 
-    image: nocodb/nocodb:latest
-    ports: 
-      - "8091:8080"
-    restart: always
-    environment: 
-      # Тук указваме на NocoDB къде е базата
-      NC_DB: "pg://postgres:5432?u=postgres&p=password&d=gymbox" 
-    depends_on: 
-      - postgres
-    volumes: 
-      - nc_data:/usr/app/data
-
-  postgres: 
-    # Използваме версия 16, за да избегнем проблемите с 'latest'
-    image: postgres:16
-    restart: always
-    environment: 
-      POSTGRES_DB: gymbox
-      POSTGRES_PASSWORD: password
-      POSTGRES_USER: postgres
-    volumes: 
-      - pg_data:/var/lib/postgresql/data
-    healthcheck:
-      test: ["CMD-SHELL", "pg_isready -U postgres"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
-
-volumes:
-  nc_data:
-  pg_data:
-
-
-### FILE: ./kv/docker-compose.yml ###
-- type: html
-  title: "Last 3 notes"
-  content: |
-    <div id="kv-last3" style="font-family:system-ui; line-height:1.35;">
-      <div style="opacity:.75">Loading…</div>
-    </div>
-
-    <script>
-      (async () => {
-        const host = "http://HOST_IP:8099";
-        const box = document.getElementById("kv-last3");
-
-        function esc(s){return String(s).replace(/[&<>"']/g, c => ({ "&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#039;" }[c]));}
-
-        async function load() {
-          try {
-            const r = await fetch(host + "/api/recent?limit=3");
-            const j = await r.json();
-            const ev = (j.events || []).slice().reverse(); // newest first -> show newest on top
-            if (!ev.length) { box.innerHTML = '<div style="opacity:.75">No entries yet.</div>'; return; }
-
-            box.innerHTML = ev.map(e => `
-              <div style="padding:10px; border:1px solid rgba(255,255,255,.12); border-radius:12px; margin:8px 0;">
-                <div style="display:flex; justify-content:space-between; gap:10px;">
-                  <strong>${esc(e.key)}</strong>
-                  <span style="opacity:.65; font-size:12px;">${esc(new Date(e.ts).toLocaleString())}</span>
-                </div>
-                <div style="margin-top:6px; white-space:pre-wrap;">${esc(e.value ?? "")}</div>
-              </div>
-            `).join("");
-          } catch (err) {
-            box.innerHTML = '<div style="color:#ffb3b3">Cannot load recent entries.</div>';
-          }
-        }
-
-        await load();
-        setInterval(load, 15000); // refresh на 15 сек
-      })();
-    </script>
-
-
-### FILE: ./vaultwarden/docker-compose.yml ###
-services:
-  vaultwarden:
-    image: vaultwarden/server:latest
-    container_name: vaultwarden
-    restart: always
-    environment:
-      - WEBSOCKET_ENABLED=true
-      - SIGNUPS_ALLOWED=false  # Ще го сменим на false, след като направиш акаунт
-      - DOMAIN=https://vaultwarden.home
-    volumes:
-      - ./vw-data:/data
-    ports:
-      - 8085:80 # 8085 към външния свят (както е в NPM), 80 вътре в контейнера
-
-
-### FILE: ./nginx/docker-compose.yml ###
-version: '3.8'
-services:
-  app:
-    image: 'jc21/nginx-proxy-manager:latest'
-    restart: unless-stopped
-    ports:
-      - '80:80'      # Публичен HTTP порт (Вход за сайтовете ти)
-      - '81:81'      # Админ панел на NPM
-      - '443:443'    # HTTPS порт
-    volumes:
-      - ./data:/data
-      - ./letsencrypt:/etc/letsencrypt
