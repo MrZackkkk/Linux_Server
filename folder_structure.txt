@@ -17,8 +17,7 @@
 ├── kavita
 │   ├── books
 │   │   └── Library
-│   │       ├── Jordan_Radichkov_-_Noev_kovcheg_-_11940-b.epub
-│   │       └── Jordan_Radichkov_-_Noev_kovcheg_-_11940-b.pdf
+│   │       └── Jordan_Radichkov_-_Noev_kovcheg_-_11940-b.epub
 │   ├── docker-compose.yml
 │   └── kavita_config
 │       ├── appsettings.json
@@ -30,6 +29,8 @@
 │       ├── cache-long
 │       │   └── pr_cache
 │       ├── covers
+│       │   ├── v1_c1.png
+│       │   └── v2_c2.png
 │       ├── favicons
 │       ├── fonts
 │       ├── images
@@ -38,15 +39,20 @@
 │       ├── kavita.db-shm
 │       ├── kavita.db-wal
 │       ├── logs
-│       │   └── kavita20260216.log
+│       │   ├── kavita20260216.log
+│       │   └── kavita20260217.log
 │       ├── progress_export.csv
 │       ├── progress_export-v0.8.5.csv
 │       ├── temp
 │       ├── templates
 │       └── themes
 ├── koillection
+│   ├── config
 │   ├── data
-│   └── db
+│   ├── db
+│   ├── docker-compose.yml
+│   ├── docker_compose.yml
+│   └── uploads
 ├── kv
 │   ├── data
 │   │   ├── events.jsonl
@@ -594,15 +600,14 @@
     │   │   ├── db.sqlite3-shm
     │   │   └── db.sqlite3-wal
     │   ├── logs
-    │   │   ├── overseerr-2026-02-09.log.gz
-    │   │   ├── overseerr-2026-02-10.log.gz
     │   │   ├── overseerr-2026-02-11.log.gz
     │   │   ├── overseerr-2026-02-12.log.gz
     │   │   ├── overseerr-2026-02-13.log.gz
     │   │   ├── overseerr-2026-02-14.log.gz
     │   │   ├── overseerr-2026-02-15.log.gz
-    │   │   ├── overseerr-2026-02-16.log
-    │   │   └── overseerr.log -> overseerr-2026-02-16.log
+    │   │   ├── overseerr-2026-02-16.log.gz
+    │   │   ├── overseerr-2026-02-17.log
+    │   │   └── overseerr.log -> overseerr-2026-02-17.log
     │   └── settings.json
     ├── plex_config
     │   └── Library
@@ -9700,4 +9705,4 @@
     │   └── rdtclient.log
     └── tailscale_config  [error opening dir]
 
-3090 directories, 6611 files
+3092 directories, 6614 files
