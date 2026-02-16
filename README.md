@@ -46,5 +46,5 @@ tree -I 'node_modules|.git' > folder_structure.txt
 
 **Generate `my_server_architecture.txt`:**
 ```bash
-find . -maxdepth 4 -not -path '*/.*' -name "docker-compose.yml" -print0 | sort -z | xargs -0 -I {} bash -c 'echo ""; echo "### FILE: {} ###"; cat "{}"' > my_server_architecture.txt
+sudo find . -maxdepth 4 -not -path '*/.*' -name "docker-compose.yml" -print0 | sort -z | xargs -0 -I {} bash -c 'echo ""; echo "### FILE: {} ###"; cat "{}"' > my_server_architecture.txt
 ```
