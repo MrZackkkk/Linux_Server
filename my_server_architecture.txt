@@ -15,6 +15,18 @@ services:
     volumes: 
       - nc_data:/usr/app/data
 
+  arbitrage-engine:
+    build: ./workspace/book_arbitrage  # Path to the folder we created above
+    container_name: arbitrage_engine
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=password
+      - POSTGRES_DB=gymbox
+      - POSTGRES_HOST=postgres  # This works because they are in the same network
+    depends_on:
+      - postgres
+    restart: "no"  # We run it once manually or schedule it, don't restart constantly
+
   postgres: 
     # Използваме версия 16, за да избегнем проблемите с 'latest'
     image: postgres:16
@@ -34,6 +46,28 @@ services:
 volumes:
   nc_data:
   pg_data:
+
+### FILE: ./dozzle/docker-compose.yml ###
+version: "3"
+services:
+  dozzle:
+    container_name: dozzle
+    image: amir20/dozzle:latest
+    restart: unless-stopped
+    volumes:
+      # Dozzle се нуждае от достъп до Docker сокета, за да чете логовете
+      - /var/run/docker.sock:/var/run/docker.sock
+    ports:
+      # Използваме 8888, защото Glance вече е заел 8080
+      - 8888:8080
+    environment:
+      # Опционално: Заглавие на страницата
+      - DOZZLE_TITLE=Home Server Logs
+      # Опционално: Ако искаш да виждаш само контейнери, които работят
+      - DOZZLE_FILTER=status=running
+      # Ако решиш да го изкараш публично, може да сложиш потребител и парола:
+      # - DOZZLE_USERNAME=admin
+      # - DOZZLE_PASSWORD=tvoiata_parola
 
 ### FILE: ./filebrowser-docker/docker-compose.yml ###
 version: '3'

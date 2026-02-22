@@ -1,0 +1,20 @@
+                             ....              zdravko@home-server
+              .',:clooo:  .:looooo:.           -------------------
+           .;looooooooc  .oooooooooo'          OS: Ubuntu 24.04.4 LTS (Noble Numbat) x86_64
+        .;looooool:,''.  :ooooooooooc          Kernel: Linux 6.8.0-100-generic
+       ;looool;.         'oooooooooo,          Uptime: 16 hours, 58 mins
+      ;clool'             .cooooooc.  ,,       Packages: 1147 (dpkg)
+         ...                ......  .:oo,      Shell: bash 5.2.21
+  .;clol:,.                        .loooo'     Terminal: /dev/pts/0
+ :ooooooooo,                        'ooool     CPU: Intel(R) Celeron(R) N3050 (2) @ 2.16 GHz
+'ooooooooooo.                        loooo.    GPU: Intel Atom/Celeron/Pentium Processor x5-E8000/J3xxx/N3xxx Integrated Graphics Controller @ 0.60 GHz [Integrated]
+'ooooooooool                         coooo.    Memory: 1.93 GiB / 3.75 GiB (51%)
+ ,loooooooc.                        .loooo.    Swap: 44.50 MiB / 3.75 GiB (1%)
+   .,;;;'.                          ;ooooc     Disk (/): 27.16 GiB / 97.87 GiB (28%) - ext4
+       ...                         ,ooool.     Local IP (enp3s0): 192.168.0.160/24
+    .cooooc.              ..',,'.  .cooo.      Locale: en_US.UTF-8
+      ;ooooo:.           ;oooooooc.  :l.
+       .coooooc,..      coooooooooo.
+         .:ooooooolc:. .ooooooooooo'
+           .':loooooo;  ,oooooooooc
+               ..';::c'  .;loooo:'
