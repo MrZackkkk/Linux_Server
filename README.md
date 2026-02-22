@@ -46,7 +46,7 @@ sudo find . -maxdepth 4 -not -path '*/.*' -name "docker-compose.yml" -print0 | s
 
 **Update Repository:**
 ```bash
-git add my_server_architecture.txt folder_structure.txt
+git add my_server_architecture.txt folder_structure.txt fastfetch.txt
 git commit -m "Update server documentation"
 git pull origin main --no-rebase
 git push origin main
