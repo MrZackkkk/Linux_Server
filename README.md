@@ -28,25 +28,25 @@ The server hosts a suite of applications for media, productivity, and system man
 
 The project is organized by service, with each directory containing its own `docker-compose.yml` and configuration files.
 
-*(Note: The actual configuration files are primarily documented in `my_server_architecture.txt` and `folder_structure.txt`)*
+*(Note: The actual configuration files are primarily documented in `my_server_architecture.json` and `folder_structure.json`)*
 
 ## 📝 Generating Documentation
 
-The documentation files `folder_structure.txt` and `my_server_architecture.txt` are generated using the following commands:
+The documentation files `folder_structure.json` and `my_server_architecture.json` are generated using the following commands:
 
-**Generate `folder_structure.txt`:**
+**Generate `folder_structure.json`:**
 ```bash
-tree -I 'node_modules|.git' > folder_structure.txt
+tree -J -I 'node_modules|.git' > folder_structure.json
 ```
 
-**Generate `my_server_architecture.txt`:**
+**Generate `my_server_architecture.json`:**
 ```bash
-sudo find . -maxdepth 4 -not -path '*/.*' -name "docker-compose.yml" -print0 | sort -z | xargs -0 -I {} bash -c 'echo ""; echo "### FILE: {} ###"; cat "{}"' > my_server_architecture.txt
+sudo find . -maxdepth 4 -not -path '*/.*' -name "docker-compose.yml" -exec sh -c 'jq -n --arg file "$1" --rawfile content "$1" '\''{"file": $file, "content": $content}'\''' _ {} \; | jq -s '.' > my_server_architecture.json
 ```
 
 **Update Repository:**
 ```bash
-git add my_server_architecture.txt folder_structure.txt fastfetch.txt
+git add my_server_architecture.json folder_structure.json fastfetch.txt
 git commit -m "Update server documentation"
 git pull origin main --no-rebase
 git push origin main
