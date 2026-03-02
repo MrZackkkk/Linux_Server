@@ -1,5 +1,6 @@
 [
   {"type":"directory","name":".","contents":[
+<<<<<<< HEAD
     {"type":"file","name":"backup_filters.txt"},
     {"type":"file","name":"backup.log"},
     {"type":"file","name":"docker-compose.yml"},
@@ -11697,4 +11698,15 @@
   ]}
 ,
   {"type":"report","directories":3077,"files":5765}
+=======
+    {"type":"file","name":"README.md"},
+    {"type":"file","name":"fastfetch.txt"},
+    {"type":"file","name":"folder_structure.json"},
+    {"type":"file","name":"folder_structure.txt"},
+    {"type":"file","name":"my_server_architecture.json"},
+    {"type":"file","name":"my_server_architecture.txt"}
+  ]}
+,
+  {"type":"report","directories":1,"files":6}
+>>>>>>> e47d69bc5dbe9c4095ecb43b38840a408739e9d3
 ]

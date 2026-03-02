@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 [
   {
     "file": "./dozzle/docker-compose.yml",
@@ -48,3 +49,6 @@
     "content": "version: '3.8'\nservices:\n  app:\n    image: 'jc21/nginx-proxy-manager:latest'\n    restart: unless-stopped\n    ports:\n      - '80:80'      # Публичен HTTP порт (Вход за сайтовете ти)\n      - '81:81'      # Админ панел на NPM\n      - '443:443'    # HTTPS порт\n    volumes:\n      - ./data:/data\n      - ./letsencrypt:/etc/letsencrypt\n"
   }
 ]
+=======
+[]
+>>>>>>> e47d69bc5dbe9c4095ecb43b38840a408739e9d3
