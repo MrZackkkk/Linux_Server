@@ -1,0 +1,12 @@
+[
+  {"type":"directory","name":".","contents":[
+    {"type":"file","name":"README.md"},
+    {"type":"file","name":"fastfetch.txt"},
+    {"type":"file","name":"folder_structure.json"},
+    {"type":"file","name":"folder_structure.txt"},
+    {"type":"file","name":"my_server_architecture.json"},
+    {"type":"file","name":"my_server_architecture.txt"}
+  ]}
+,
+  {"type":"report","directories":1,"files":6}
+]
